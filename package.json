@@ -1,6 +1,6 @@
 {
   "name": "trainerdb-json",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight and powerful JSON-based database for Node.js with CommonJS support.",
   "type": "commonjs",
   "main": "dist/cjs/trainerdb.js",
