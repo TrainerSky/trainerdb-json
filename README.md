@@ -1,6 +1,6 @@
 # TrainerDB-Json - Lightweight And Powerful JSON Database for Node.js
 
-TrainerDB-Json is a lightweight and poweful file-based JSON database that supports both **CommonJS (require)**.
+TrainerDB-Json is a lightweight and poweful file-based JSON database that supports **CommonJS (require)**.
 
 -  **Zero Dependencies** (only `fs-extra`)
 -  **Fast & Simple** Key-Value Storage
