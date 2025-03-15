@@ -87,10 +87,18 @@ class TrainerDB {
   }
 
   // Math Operations - Now Separated
-  async plus(key: string, amount: number) { return plus(this.load.bind(this), this.save.bind(this), key, amount); }
-  async minus(key: string, amount: number) { return minus(this.load.bind(this), this.save.bind(this), key, amount); }
-  async multiply(key: string, factor: number) { return multiply(this.load.bind(this), this.save.bind(this), key, factor); }
-  async divide(key: string, divisor: number) { return divide(this.load.bind(this), this.save.bind(this), key, divisor); }
+  async plus(key: string, amount: number) {
+    return plus(this.load, this.save, key, amount);
+  }
+  async minus(key: string, amount: number) {
+    return minus(this.load, this.save, key, amount);
+  }
+  async multiply(key: string, factor: number) {
+    return multiply(this.load, this.save, key, factor);
+  }
+  async divide(key: string, divisor: number) {
+    return divide(this.load, this.save, key, divisor);
+  }
   
   // Keys & Values
   async values(key: string): Promise<any[]> {
