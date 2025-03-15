@@ -1,5 +1,10 @@
 export const deepGet = (obj: any, path: string): any => {
-  return path.split(".").reduce((o, key) => (o && typeof o === "object" && key in o ? o[key] : undefined), obj);
+  return path.split(".").reduce((o, key) => {
+    if (o && typeof o === "object") {
+      return o[key];
+    }
+    return undefined;
+  }, obj);
 };
 
 export const deepSet = (obj: any, path: string, value: any): void => {
