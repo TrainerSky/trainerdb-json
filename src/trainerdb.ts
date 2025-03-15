@@ -1,6 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import { deepGet, deepSet, deepHas, deepRemove } from "./utils";
+import { plus, minus, multiply, divide } from "./mathOperations";
 
 class TrainerDB {
   private dbDir: string;
@@ -85,31 +86,11 @@ class TrainerDB {
   await this.save(data);
   }
 
-  // Deep Math Operations
-  async plus(key: string, amount: number): Promise<void> {
-    const data = await this.load();
-    const value = deepGet(data, key) || 0;
-    if (typeof value !== "number") throw new Error(`"${key}" is not a number`);
-    deepSet(data, key, value + amount);
-    await this.save(data);
-  }
-
-  async minus(key: string, amount: number): Promise<void> {
-    await this.plus(key, -amount);
-  }
-
-  async multiply(key: string, factor: number): Promise<void> {
-    const data = await this.load();
-    const value = deepGet(data, key) || 1;
-    if (typeof value !== "number") throw new Error(`"${key}" is not a number`);
-    deepSet(data, key, value * factor);
-    await this.save(data);
-  }
-
-  async divide(key: string, divisor: number): Promise<void> {
-    if (divisor === 0) throw new Error("Cannot divide by zero");
-    await this.multiply(key, 1 / divisor);
-  }
+  // Math Operations - Now Separated
+  async plus(key: string, amount: number) { return plus(this.load.bind(this), this.save.bind(this), key, amount); }
+  async minus(key: string, amount: number) { return minus(this.load.bind(this), this.save.bind(this), key, amount); }
+  async multiply(key: string, factor: number) { return multiply(this.load.bind(this), this.save.bind(this), key, factor); }
+  async divide(key: string, divisor: number) { return divide(this.load.bind(this), this.save.bind(this), key, divisor); }
   
   // Keys & Values
   async values(key: string): Promise<any[]> {
