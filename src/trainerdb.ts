@@ -6,22 +6,57 @@ import { plus, minus, multiply, divide } from "./mathOperations";
 class TrainerDB {
   private dbDir: string;
   private filePath: string;
+  private cache: any = null;
+  private static cacheSize: number = 50 * 1024 * 1024; // Default 50MB globally
+  private static autoSaveInterval: number = 10 * 60 * 1000; // Default 10 minutes
+  private autoSaveTimer: NodeJS.Timeout | null = null;
 
   constructor(dbDir: string, fileName: string) {
     this.dbDir = dbDir;
     this.filePath = path.join(this.dbDir, fileName);
     fs.ensureDirSync(this.dbDir);
     if (!fs.existsSync(this.filePath)) this.save({});
+    // Start auto-save
+    this.startAutoSave();
   }
 
-  // Load Database
   private async load(): Promise<any> {
-    return fs.readJSON(this.filePath).catch(() => ({}));
+    if (this.cache) return this.cache;
+    this.cache = await fs.readJSON(this.filePath).catch(() => ({}));
+    return this.cache;
   }
 
-  // Save Database
   private async save(data: any): Promise<void> {
-    await fs.writeJSON(this.filePath, data, { spaces: 2 });
+    this.cache = data;
+    if (this.getCacheSize() > TrainerDB.cacheSize) {
+      await fs.writeJSON(this.filePath, data, { spaces: 2 });
+    }
+  }
+
+  private getCacheSize(): number {
+    return Buffer.byteLength(JSON.stringify(this.cache), "utf8");
+  }
+
+  static setCacheSizeMB(sizeMB: number) {
+    TrainerDB.cacheSize = sizeMB * 1024 * 1024;
+  }
+
+  // Manually force cache write
+  async flush(): Promise<void> {
+    await fs.writeJSON(this.filePath, this.cache, { spaces: 2 });
+  }
+
+  // Start auto-save interval
+  private startAutoSave(): void {
+    if (this.autoSaveTimer) clearInterval(this.autoSaveTimer);
+    this.autoSaveTimer = setInterval(() => {
+      this.flush();
+    }, TrainerDB.autoSaveInterval);
+  }
+
+  // Allow users to configure auto-save interval
+  static setAutoSaveInterval(minutes: number): void {
+    TrainerDB.autoSaveInterval = minutes * 60 * 1000;
   }
 
   // Set Data
