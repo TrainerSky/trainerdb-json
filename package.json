@@ -1,0 +1,44 @@
+{
+  "name": "trainerdb-json",
+  "version": "1.0.0",
+  "description": "A lightweight and powerful JSON-based database for Node.js with CommonJS support.",
+  "type": "commonjs",
+  "main": "dist/cjs/trainerdb.js",
+  "types": "dist/types/trainerdb.d.ts",
+  "exports": {
+    "require": "./dist/cjs/trainerdb.js"
+  },
+  "files": [
+    "src/",
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc",
+    "test": "jest --config jest.config.cjs",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test"
+  },
+  "dependencies": {
+    "fs-extra": "^11.1.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.1",
+    "@types/jest": "^29.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TrainerSky/trainerdb-json.git"
+  },
+  "keywords": ["lightweight", "fast", "efficient", "PokemonShowdown", "json", "Db", "database", "cjs", "typescript"],
+  "author": "Trainer Sky <clarkj338@gmail.com>",
+  "license": "MIT"
+}
